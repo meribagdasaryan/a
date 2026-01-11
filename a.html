@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Casino | Твой Джекпот ждет</title>
+    <style>
+        /* --- Сброс и Базовые стили --- */
+        :root {
+            --neon-blue: #00c6ff;
+            --neon-purple: #bd00ff;
+            --neon-gold: #ffd700;
+            --dark-bg: #0f1219;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif; /* Более современный шрифт */
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* --- Анимированный Фон --- */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            overflow: hidden;
+        }
+
+        /* Эффект "частиц" на фоне */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: moveStars 100s linear infinite;
+            opacity: 0.3;
+        }
+        @keyframes moveStars {
+            from {transform: translateY(0);}
+            to {transform: translateY(-2000px);}
+        }
+
+
+        /* --- Контейнер --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Хедер --- */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Обновленная Hero Секция с 3D Слотами --- */
+        .hero {
+            min-height: 95vh; /* Увеличили высоту */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Разделяем текст и слот */
+            padding-bottom: 60px;
+            position: relative;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 500px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            font-weight: 900;
+        }
+        
+        .highlight {
+             color: var(--neon-gold);
+             text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        /* --- CSS 3D Slot Machine --- */
+        .slot-machine-stage {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            perspective: 1000px; /* Важно для 3D эффекта */
+            z-index: 1;
+        }
+        .slot-machine-case {
+            width: 320px;
+            height: 220px;
+            background: linear-gradient(45deg, #2b2b2b, #1a1a1a);
+            border-radius: 20px;
+            border: 3px solid var(--neon-purple);
+            box-shadow: 
+                0 0 30px rgba(189, 0, 255, 0.3),
+                inset 0 0 20px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Декоративные лампочки */
+        .slot-machine-case::before {
+            content: '';
+            position: absolute;
+            top: -10px; left: 20%; right: 20%;
+            height: 5px;
+            background: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-radius: 10px;
+            animation: blink 1s infinite alternate;
+        }
+        @keyframes blink { from{opacity:0.5} to{opacity:1}}
+
+        .reels-container {
+            display: flex;
+            gap: 10px;
+            transform-style: preserve-3d; /* Важно для вложенных 3D элементов */
+        }
+
+        /* Отдельный барабан (Куб) */
+        .reel-cube {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            transform-style: preserve-3d;
+            /* Анимация вращения */
+            animation: spinReel 4s cubic-bezier(0.1, 0.7, 0.1, 1) forwards;
+        }
+
+        /* Грани куба */
+        .reel-face {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(to bottom, #fff, #e0e0e0);
+            border: 2px solid #c0c0c0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            backface-visibility: hidden; /* Скрываем заднюю часть грани */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* Позиционирование граней в 3D пространстве */
+        /* Передняя грань (Выигрышная - 7️⃣) */
+        .face-front  { transform: rotateX(0deg) translateZ(40px); }
+        /* Верхняя грань */
+        .face-top    { transform: rotateX(90deg) translateZ(40px); }
+        /* Задняя грань */
+        .face-back   { transform: rotateX(180deg) translateZ(40px); }
+        /* Нижняя грань */
+        .face-bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+        /* Задержки для реалистичности */
+        .reel-2 { animation-delay: 0.3s; }
+        .reel-3 { animation-delay: 0.6s; }
+
+        /* Ключевые кадры вращения */
+        @keyframes spinReel {
+            0% { transform: rotateX(0deg); }
+            /* Делаем много оборотов (например 5 полных = 1800deg) и останавливаемся на 0 (Front face) */
+            100% { transform: rotateX(-1800deg); } 
+        }
+        
+        /* Эффект размытия при быстром вращении (опционально, для мощных устройств) */
+        /* .reel-cube:active { filter: blur(2px); } */
+
+
+        /* --- Стрелка вниз --- */
+        .scroll-hint-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 2;
+        }
+        .scroll-hint {
+            font-size: 2rem;
+            color: var(--neon-blue);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-15px);}
+            60% {transform: translateY(-7px);}
+        }
+
+        /* --- Остальные секции (упрощены для краткости, стиль сохранен) --- */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            margin-top: 80px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 80px;
+        }
+        .game-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0, 198, 255, 0.2);
+            border-color: var(--neon-blue);
+        }
+
+        .game-img-placeholder {
+            height: 200px;
+            background: linear-gradient(45deg, #2a2a2a, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Блик на карточках */
+        .game-img-placeholder::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%; width: 20%; height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+        .game-card:hover .game-img-placeholder::after {
+            left: 120%;
+        }
+
+        .game-info { padding: 20px; text-align: center; }
+        .game-info h3 { font-size: 1.4rem; margin-bottom: 10px; }
+
+        /* --- Промокод и CTA --- */
+        .promo-container {
+            background: linear-gradient(135deg, rgba(0,198,255,0.15), rgba(189,0,255,0.15));
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 80px;
+        }
+
+        .promo-code-box {
+            background: #000;
+            border: 2px dashed var(--neon-gold);
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .promo-text {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            color: var(--neon-gold);
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .copy-btn {
+            background: var(--neon-gold);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .copy-btn:hover { background: #fff; }
+
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--neon-gold), #ffaa00);
+            color: #000;
+            font-size: 1.5rem;
+            font-weight: 900;
+            padding: 25px 70px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-btn:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 20px 50px rgba(255, 215, 0, 0.6);
+        }
+        /* Эффект "сияния" на кнопке */
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        .cta-btn:hover::before { left: 100%; transition: 0.7s; }
+
+
+        /* --- Адаптив (Mobile) --- */
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column-reverse; 
+                justify-content: center;
+                text-align: center;
+                padding-top: 100px; /* Место под слот */
+            }
+            .hero-content { margin-top: 40px; }
+            .hero h1 { font-size: 2.8rem; }
+            
+            .slot-machine-stage {
+                width: 100%;
+                /* Уменьшаем слот на мобильных */
+                transform: scale(0.8); 
+                margin-bottom: -30px;
+            }
+            
+            .scroll-hint-container { bottom: 10px; }
+        }
+        @media (max-width: 480px) {
+             .hero h1 { font-size: 2.2rem; }
+             .promo-code-box { flex-direction: column; gap: 10px; padding: 15px; }
+             .promo-text { font-size: 1.5rem; }
+             .cta-btn { padding: 20px 40px; font-size: 1.2rem; width: 90%; }
+             /* Ещё сильнее уменьшаем слот для узких экранов */
+             .slot-machine-stage { transform: scale(0.65); }
+        }
+    </style>
+     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="animated-bg">
+        <div class="stars"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">WIN RUSH</div>
+            <button class="copy-btn" style="background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);" onclick="redirect()">Вход</button>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>ТВОЙ <span class="highlight">ДЖЕКПОТ</span> УЖЕ ВЫПАЛ!</h1>
+                <p>Забирай приветственный пакет 500% + 250 FS прямо сейчас. Скролль вниз, чтобы активировать бонус.</p>
+            </div>
+
+            <div class="slot-machine-stage">
+                <div class="slot-machine-case">
+                    <div class="reels-container">
+                        <div class="reel-cube reel-1">
+                            <div class="reel-face face-front">7️⃣</div>
+                            <div class="reel-face face-top">🍒</div>
+                            <div class="reel-face face-back">💎</div>
+                            <div class="reel-face face-bottom">🍋</div>
+                        </div>
+                        <div class="reel-cube reel-2">
+                             <div class="reel-face face-front">7️⃣</div>
+                             <div class="reel-face face-top">🍊</div>
+                             <div class="reel-face face-back">🔔</div>
+                             <div class="reel-face face-bottom">🍇</div>
+                        </div>
+                        <div class="reel-cube reel-3">
+                             <div class="reel-face face-front">7️⃣</div>
+                             <div class="reel-face face-top">⭐</div>
+                             <div class="reel-face face-back">🍉</div>
+                             <div class="reel-face face-bottom">👑</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-hint-container">
+                <p style="color: #aaa; margin-bottom: 10px;">Листай вниз за бонусом</p>
+                <div class="scroll-hint">⇩</div>
+            </div>
+        </section>
+
+
+        <h2 class="section-title">Топ Выигрыши Сегодня</h2>
+        <section class="games-grid">
+            <div class="game-card" onclick="redirect()">
+                <div class="game-img-placeholder" style="background: linear-gradient(to bottom right, #ff5f6d, #ffc371);">[СЛОТЫ]</div>
+                <div class="game-info">
+                    <h3>Gates of Olympus</h3>
+                    <p style="color: var(--neon-gold);">Max Win: x5000</p>
+                </div>
+            </div>
+             <div class="game-card" onclick="redirect()">
+                <div class="game-img-placeholder" style="background: linear-gradient(to bottom right, #00c6ff, #0072ff);">[КРАШ ИГРЫ]</div>
+                 <div class="game-info">
+                    <h3>Aviator / JetX</h3>
+                    <p style="color: var(--neon-blue);">Живой кэф x100+</p>
+                </div>
+            </div>
+             <div class="game-card" onclick="redirect()">
+                <div class="game-img-placeholder" style="background: linear-gradient(to bottom right, #11998e, #38ef7d);">[LIVE ДИЛЕРЫ]</div>
+                 <div class="game-info">
+                    <h3>Lightning Roulette</h3>
+                    <p style="color: #38ef7d;">Online 24/7</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="promo-container">
+            <h2 style="font-size: 2rem; margin-bottom: 20px;">Активируй VIP Статус</h2>
+            <p>Введи этот код при регистрации и получи максимальный буст</p>
+            <div class="promo-code-box">
+                <span class="promo-text" id="promoCode">Honey2026</span>
+                <button class="copy-btn" onclick="copyText()">КОПИРОВАТЬ</button>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="javascript:void(0)" class="cta-btn" onclick="redirect()">ЗАБРАТЬ ВЫИГРЫШ ➔</a>
+            <p style="color: #666; margin-bottom: 50px; font-size: 0.9rem;">Gambling can be addictive. Play responsibly. 18+</p>
+        </div>
+
+    </div>
+
+    <script>
+        // === ВАЖНО: ЗАМЕНИТЕ ССЫЛКУ НИЖЕ НА ВАШУ ПАРТНЕРСКУЮ ССЫЛКУ ===
+        const AFFILIATE_LINK = "https://lkzq.cc/644450"; 
+
+        // Функция перенаправления
+        function redirect() {
+            // Можно добавить трекинг клика здесь
+            console.log("User clicked CTA, redirecting...");
+            window.location.href = AFFILIATE_LINK;
+        }
+
+        // Функция копирования промокода
+        function copyText() {
+            const promo = document.getElementById('promoCode').innerText;
+            navigator.clipboard.writeText(promo).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.innerText;
+                btn.innerText = "СКОПИРОВАНО!";
+                btn.style.background = "#38ef7d"; // Зеленый цвет успеха
+                btn.style.color = "#000";
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "var(--neon-gold)";
+                    btn.style.color = "#000";
+                }, 2500);
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
